@@ -1,6 +1,5 @@
 
 import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
 
 const Header: React.FC = () => {
@@ -22,6 +21,14 @@ const Header: React.FC = () => {
     };
   }, []);
 
+  const scrollToGallery = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const gallerySection = document.getElementById('gallery-section');
+    if (gallerySection) {
+      gallerySection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header ref={headerRef} className="relative h-screen flex flex-col items-center justify-center text-center p-4 overflow-hidden">
       <div className="animate-fade-in">
@@ -41,12 +48,19 @@ const Header: React.FC = () => {
         </p>
         
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link to="/rsvp" className="btn-primary inline-block">
+          <a 
+            href="#rsvp-section" 
+            className="btn-primary inline-block"
+          >
             RSVP Now
-          </Link>
-          <Link to="/gallery" className="px-6 py-3 rounded-full border-2 border-softPurple text-nightBlue font-medium transition-all duration-300 hover:bg-softPurple hover:text-white">
+          </a>
+          <a 
+            href="#gallery-section" 
+            onClick={scrollToGallery}
+            className="px-6 py-3 rounded-full border-2 border-softPurple text-nightBlue font-medium transition-all duration-300 hover:bg-softPurple hover:text-white"
+          >
             View Gallery
-          </Link>
+          </a>
         </div>
       </div>
       

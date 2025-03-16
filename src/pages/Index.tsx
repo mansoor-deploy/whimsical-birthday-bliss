@@ -1,6 +1,5 @@
 
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Countdown from '../components/Countdown';
 import VenueInfo from '../components/VenueInfo';
@@ -9,10 +8,22 @@ import AudioPlayer from '../components/AudioPlayer';
 import FloatingVideo from '../components/FloatingVideo';
 import GoogleCalendar from '../components/GoogleCalendar';
 import StarryBackground from '../components/StarryBackground';
-import { Heart, Star } from 'lucide-react';
+import { Heart, Star, Send } from 'lucide-react';
+import { useToast } from '../hooks/use-toast';
 
 const Index = () => {
   const mainRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  
+  const handleRSVP = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    toast({
+      title: "RSVP Received!",
+      description: "Thank you for confirming your attendance. We look forward to celebrating with you!",
+      duration: 5000,
+    });
+  };
 
   return (
     <div ref={mainRef} className="relative min-h-screen">
@@ -43,7 +54,7 @@ const Index = () => {
         <GoogleCalendar />
         
         {/* Gallery Section */}
-        <section className="py-12 px-4">
+        <section id="gallery-section" className="py-12 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="section-title mb-8">Precious Moments</h2>
             
@@ -67,7 +78,7 @@ const Index = () => {
         </section>
         
         {/* RSVP Section */}
-        <section className="py-12 px-4 bg-gradient-to-r from-mintGreen/40 to-babyBlue/40">
+        <section id="rsvp-section" className="py-12 px-4 bg-gradient-to-r from-mintGreen/40 to-babyBlue/40">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="section-title mb-8">Join The Celebration</h2>
             
@@ -76,9 +87,53 @@ const Index = () => {
                 We would be delighted to have you join us for Emma's first birthday celebration!
               </p>
               
-              <Link to="/rsvp" className="btn-primary inline-block">
-                RSVP Now
-              </Link>
+              <form onSubmit={handleRSVP} className="space-y-6 max-w-md mx-auto">
+                <div className="glass-panel rounded-lg p-4">
+                  <input 
+                    type="text" 
+                    placeholder="Full Name" 
+                    className="w-full bg-transparent border-b border-nightBlue/20 p-2 focus:outline-none focus:border-softPurple" 
+                    required
+                  />
+                </div>
+                
+                <div className="glass-panel rounded-lg p-4">
+                  <input 
+                    type="email" 
+                    placeholder="Email Address" 
+                    className="w-full bg-transparent border-b border-nightBlue/20 p-2 focus:outline-none focus:border-softPurple" 
+                    required
+                  />
+                </div>
+                
+                <div className="glass-panel rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="font-medium text-sm text-nightBlue">Will you be attending?</p>
+                  </div>
+                  <div className="flex gap-4 justify-center">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="attending" value="yes" className="accent-softPurple" required />
+                      <span>Yes</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="attending" value="no" className="accent-softPurple" />
+                      <span>No</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="attending" value="maybe" className="accent-softPurple" />
+                      <span>Maybe</span>
+                    </label>
+                  </div>
+                </div>
+                
+                <button 
+                  type="submit" 
+                  className="btn-primary flex items-center justify-center gap-2 mx-auto"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Send RSVP</span>
+                </button>
+              </form>
             </div>
           </div>
         </section>

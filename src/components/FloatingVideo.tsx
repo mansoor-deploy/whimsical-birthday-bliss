@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Video, X } from 'lucide-react';
 import { audioRef } from './AudioPlayer';
@@ -7,6 +6,7 @@ const FloatingVideo: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [wasAudioPlaying, setWasAudioPlaying] = useState(false);
+  const [hasAppearedOnce, setHasAppearedOnce] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +16,10 @@ const FloatingVideo: React.FC = () => {
       
       if (scrollPosition >= documentHeight - 100) {
         setIsVisible(true);
+        setHasAppearedOnce(true);
+      } else if (hasAppearedOnce) {
+        // Keep it visible but minimized once it has appeared
+        setIsVisible(true);
       }
     };
 
@@ -24,29 +28,33 @@ const FloatingVideo: React.FC = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [hasAppearedOnce]);
 
   const openVideo = () => {
-    // Remember if audio was playing
-    if (audioRef.current && !audioRef.current.paused) {
-      setWasAudioPlaying(true);
+    // Remember audio state before opening video
+    if (audioRef.current) {
+      setWasAudioPlaying(!audioRef.current.paused && !audioRef.current.muted);
+      audioRef.wasPlayingBeforeVideo = !audioRef.current.paused;
+      
+      // Pause audio when opening video
       audioRef.current.pause();
     }
     setIsOpen(true);
   };
 
   const closeVideo = () => {
-    // Resume audio if it was playing before
-    if (audioRef.current && wasAudioPlaying && !audioRef.current.muted) {
-      audioRef.current.play();
-      setWasAudioPlaying(false);
+    // Resume audio if it was playing before video opened (and not muted)
+    if (audioRef.current && audioRef.wasPlayingBeforeVideo) {
+      audioRef.current.play()
+        .catch(err => console.error("Failed to resume audio:", err));
+      audioRef.wasPlayingBeforeVideo = false;
     }
     setIsOpen(false);
   };
 
   return (
     <>
-      {/* Floating Video Button - Always visible once it appears */}
+      {/* Floating Video Button - Always visible after it first appears */}
       <div 
         className={`video-bubble ${isOpen ? 'active' : ''} ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[-50px]'}`}
         style={{ 

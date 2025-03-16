@@ -50,7 +50,7 @@
   }
 
   body {
-    @apply bg-gradient-to-b from-cloudWhite to-babyBlue bg-fixed text-foreground font-body;
+    @apply bg-gradient-to-b from-softPurple/30 to-babyBlue/60 bg-fixed text-foreground font-body;
     min-height: 100%;
     overflow-y: auto;
   }
@@ -66,7 +66,7 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-white/60 backdrop-blur-md border border-white/50 shadow-sm;
+    @apply bg-white/80 backdrop-blur-md border border-white/50 shadow-sm;
   }
   
   .star {

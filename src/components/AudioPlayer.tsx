@@ -7,7 +7,10 @@ interface AudioPlayerProps {
 }
 
 // Create a global reference for the audio that can be accessed from other components
-export const audioRef = { current: null as HTMLAudioElement | null };
+export const audioRef = { 
+  current: null as HTMLAudioElement | null,
+  wasPlayingBeforeVideo: false
+};
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc }) => {
   const [isMuted, setIsMuted] = useState(false);
@@ -20,30 +23,39 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc }) => {
     audioRef.current = audio;
     
     // Try to play immediately on page load
-    const playAudio = () => {
+    const playAudio = async () => {
       if (audioRef.current) {
-        audioRef.current.play()
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch((error) => {
-            console.error("Audio playback failed:", error);
-          });
+        try {
+          await audioRef.current.play();
+          setIsPlaying(true);
+        } catch (error) {
+          console.error("Audio playback failed:", error);
+          // Add click listener as a fallback for browsers that block autoplay
+          document.addEventListener('click', handleFirstInteraction, { once: true });
+        }
+      }
+    };
+    
+    const handleFirstInteraction = async () => {
+      if (audioRef.current && !isPlaying) {
+        try {
+          await audioRef.current.play();
+          setIsPlaying(true);
+        } catch (error) {
+          console.error("Audio playback failed even after interaction:", error);
+        }
       }
     };
     
     // Try to play immediately
     playAudio();
     
-    // Also add click listener as a fallback for browsers that block autoplay
-    document.addEventListener('click', playAudio, { once: true });
-    
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
-      document.removeEventListener('click', playAudio);
+      document.removeEventListener('click', handleFirstInteraction);
     };
   }, [audioSrc]);
 
