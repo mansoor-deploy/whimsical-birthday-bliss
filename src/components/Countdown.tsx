@@ -9,9 +9,15 @@ interface TimeLeft {
   seconds: number;
 }
 
-const Countdown: React.FC = () => {
-  // Set your event date here - format: YYYY, MM (0-based), DD, HH, MM, SS
-  const eventDate = new Date(2024, 5, 15, 14, 0, 0);
+interface CountdownProps {
+  eventDate?: Date;
+  eventTitle?: string;
+}
+
+const Countdown: React.FC<CountdownProps> = ({ 
+  eventDate = new Date(2025, 2, 31, 14, 0, 0), // Default: March 31, 2025 at 2:00 PM
+  eventTitle = "Emma's First Birthday Celebration"
+}) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
@@ -45,13 +51,13 @@ const Countdown: React.FC = () => {
     const formattedDate = eventDate.toISOString().replace(/-|:|\.\d+/g, '');
     const endDate = new Date(eventDate.getTime() + (3 * 60 * 60 * 1000)).toISOString().replace(/-|:|\.\d+/g, '');
     
-    const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=Emma's First Birthday Celebration&dates=${formattedDate}/${endDate}&details=Join us for Emma's first birthday celebration!&location=1234 Starlight Avenue, Dream City`;
+    const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${formattedDate}/${endDate}&details=Join us for this special celebration!&location=1234 Starlight Avenue, Dream City`;
     
     window.open(googleCalendarUrl, '_blank');
   };
 
   return (
-    <section className="py-16 px-4 relative">
+    <section className="py-8 px-4 relative">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="section-title">The Countdown Begins</h2>
         

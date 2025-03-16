@@ -13,7 +13,11 @@ import { useToast } from '../hooks/use-toast';
 
 const Index = () => {
   const mainRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLElement>(null);
   const { toast } = useToast();
+  
+  // Set custom event date - March 31, 2025
+  const eventDate = new Date(2025, 2, 31, 14, 0, 0);
   
   const handleRSVP = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +27,12 @@ const Index = () => {
       description: "Thank you for confirming your attendance. We look forward to celebrating with you!",
       duration: 5000,
     });
+  };
+
+  const scrollToGallery = () => {
+    if (galleryRef.current) {
+      galleryRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -42,19 +52,21 @@ const Index = () => {
         <Header />
         
         {/* Countdown Section */}
-        <Countdown />
+        <Countdown eventDate={eventDate} eventTitle="Emma's First Birthday Celebration" />
         
-        {/* Animated Balloons */}
-        <AnimatedBalloons />
+        {/* No gap here - reduced spacing */}
         
         {/* Venue Information */}
         <VenueInfo />
+        
+        {/* Animated Balloons */}
+        <AnimatedBalloons />
         
         {/* Google Calendar Integration */}
         <GoogleCalendar />
         
         {/* Gallery Section */}
-        <section id="gallery-section" className="py-12 px-4">
+        <section id="gallery-section" ref={galleryRef} className="py-12 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="section-title mb-8">Precious Moments</h2>
             
