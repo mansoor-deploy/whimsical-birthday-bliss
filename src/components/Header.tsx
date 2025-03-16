@@ -1,5 +1,6 @@
 
 import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
 
 const Header: React.FC = () => {
@@ -24,28 +25,28 @@ const Header: React.FC = () => {
   return (
     <header ref={headerRef} className="relative h-screen flex flex-col items-center justify-center text-center p-4 overflow-hidden">
       <div className="animate-fade-in">
-        <div className="inline-flex items-center justify-center space-x-2 mb-2 bg-softPink/30 backdrop-blur-sm px-4 py-1 rounded-full">
+        <div className="inline-flex items-center justify-center space-x-2 mb-2 bg-softPink/50 backdrop-blur-sm px-4 py-1 rounded-full">
           <Star className="w-4 h-4 text-softPink animate-pulse-soft" />
-          <p className="text-sm font-medium text-nightBlue">First Birthday Celebration</p>
+          <p className="text-sm font-bold text-nightBlue">First Birthday Celebration</p>
           <Star className="w-4 h-4 text-softPink animate-pulse-soft" />
         </div>
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 text-nightBlue">
           <span className="block">Little Star</span>
           <span className="block mt-2 text-3xl md:text-5xl lg:text-6xl">Celebration</span>
         </h1>
-        <p className="text-lg md:text-xl text-nightBlue/80 max-w-lg mx-auto">
+        <p className="text-lg md:text-xl font-medium text-nightBlue max-w-lg mx-auto">
           Join us for a magical day as we celebrate 
-          <span className="font-semibold"> Emma's </span> 
+          <span className="font-bold"> Emma's </span> 
           first trip around the sun!
         </p>
         
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="btn-primary">
+          <Link to="/rsvp" className="btn-primary inline-block">
             RSVP Now
-          </button>
-          <button className="px-6 py-3 rounded-full border-2 border-softPurple text-nightBlue font-medium transition-all duration-300 hover:bg-softPurple hover:text-white">
+          </Link>
+          <Link to="/gallery" className="px-6 py-3 rounded-full border-2 border-softPurple text-nightBlue font-medium transition-all duration-300 hover:bg-softPurple hover:text-white">
             View Gallery
-          </button>
+          </Link>
         </div>
       </div>
       

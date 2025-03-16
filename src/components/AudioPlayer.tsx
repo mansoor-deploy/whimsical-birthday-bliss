@@ -6,10 +6,12 @@ interface AudioPlayerProps {
   audioSrc: string;
 }
 
+// Create a global reference for the audio that can be accessed from other components
+export const audioRef = { current: null as HTMLAudioElement | null };
+
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     // Create audio element
@@ -17,8 +19,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc }) => {
     audio.loop = true;
     audioRef.current = audio;
     
-    // Auto-play might be blocked by browsers, so we need user interaction
-    const startAudio = () => {
+    // Try to play immediately on page load
+    const playAudio = () => {
       if (audioRef.current) {
         audioRef.current.play()
           .then(() => {
@@ -28,19 +30,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioSrc }) => {
             console.error("Audio playback failed:", error);
           });
       }
-      
-      // Remove the event listener after first interaction
-      document.removeEventListener('click', startAudio);
     };
     
-    document.addEventListener('click', startAudio);
+    // Try to play immediately
+    playAudio();
+    
+    // Also add click listener as a fallback for browsers that block autoplay
+    document.addEventListener('click', playAudio, { once: true });
     
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
-      document.removeEventListener('click', startAudio);
+      document.removeEventListener('click', playAudio);
     };
   }, [audioSrc]);
 

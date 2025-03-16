@@ -44,12 +44,19 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+
   body {
-    @apply bg-gradient-to-b from-cloudWhite to-babyBlue bg-fixed text-foreground font-body overflow-x-hidden;
+    @apply bg-gradient-to-b from-cloudWhite to-babyBlue bg-fixed text-foreground font-body;
+    min-height: 100%;
+    overflow-y: auto;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
+    @apply font-display text-nightBlue;
   }
   
   ::selection {
@@ -59,7 +66,7 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-white/40 backdrop-blur-md border border-white/50 shadow-sm;
+    @apply bg-white/60 backdrop-blur-md border border-white/50 shadow-sm;
   }
   
   .star {
@@ -71,12 +78,12 @@
   }
   
   .section-title {
-    @apply relative text-2xl md:text-3xl font-display font-semibold text-nightBlue mb-6;
+    @apply relative text-2xl md:text-3xl font-display font-semibold text-nightBlue;
   }
   
   .section-title::after {
     content: '';
-    @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-softPink rounded-full mt-2;
+    @apply absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-softPink rounded-full;
   }
   
   .balloon {
@@ -106,11 +113,11 @@
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 ::-webkit-scrollbar-thumb {

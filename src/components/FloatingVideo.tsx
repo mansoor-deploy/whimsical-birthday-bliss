@@ -1,10 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
 import { Video, X } from 'lucide-react';
+import { audioRef } from './AudioPlayer';
 
 const FloatingVideo: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [hideBubble, setHideBubble] = useState(false);
+  const [wasAudioPlaying, setWasAudioPlaying] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,22 +27,32 @@ const FloatingVideo: React.FC = () => {
   }, []);
 
   const openVideo = () => {
+    // Remember if audio was playing
+    if (audioRef.current && !audioRef.current.paused) {
+      setWasAudioPlaying(true);
+      audioRef.current.pause();
+    }
     setIsOpen(true);
-    setHideBubble(true);
   };
 
   const closeVideo = () => {
+    // Resume audio if it was playing before
+    if (audioRef.current && wasAudioPlaying && !audioRef.current.muted) {
+      audioRef.current.play();
+      setWasAudioPlaying(false);
+    }
     setIsOpen(false);
-    // Keep button visible but half opacity
-    setHideBubble(false);
   };
 
   return (
     <>
-      {/* Floating Video Button */}
+      {/* Floating Video Button - Always visible once it appears */}
       <div 
-        className={`video-bubble ${isOpen ? 'active' : ''} ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[-50px]'} ${hideBubble ? 'scale-0' : 'scale-100'}`}
-        style={{ transition: 'opacity 0.5s ease, transform 0.5s ease, scale 0.3s ease' }}
+        className={`video-bubble ${isOpen ? 'active' : ''} ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[-50px]'}`}
+        style={{ 
+          transition: 'opacity 0.5s ease, transform 0.5s ease',
+          opacity: isVisible ? (isOpen ? 0.6 : 1) : 0
+        }}
         onClick={openVideo}
       >
         <Video className="w-6 h-6" />
